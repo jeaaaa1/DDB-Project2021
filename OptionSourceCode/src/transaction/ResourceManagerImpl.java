@@ -29,9 +29,6 @@ import lockmgr.LockManager;
 public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject implements ResourceManager
 {
     protected final static String TRANSACTION_LOG_FILENAME = "transactions.log";
-    private boolean flag=false;
-
-
 
     public Set getTransactions()
     {
@@ -54,10 +51,6 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
 
     protected String dieTime;
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
-    }
-
     public void setDieTime(String time) throws RemoteException
     {
         dieTime = time;
@@ -75,7 +68,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
     public ResourceManagerImpl(String rmiName) throws RemoteException
     {
         myRMIName = rmiName;
-        dieTime = DieSituation.NoDie.toString();
+        dieTime = "NoDie";
 
         recover();
 
@@ -84,9 +77,6 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             try
             {
                 Thread.sleep(500);
-                if(flag){
-                    System.exit(1);
-                }
             }
             catch (InterruptedException e)
             {
@@ -216,7 +206,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
                 int xid = ((Integer) iter.next()).intValue();
                 System.out.println(myRMIName + " Re-enlist to TM with xid" + xid);
                 tm.enlist(xid, this);
-                if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+                if (dieTime.equals("AfterEnlist"))
                     dieNow();
                 //                iter.remove();
             }
@@ -457,7 +447,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         Collection result = new ArrayList();
@@ -506,7 +496,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         RMTable table = getTable(xid, tablename);
@@ -544,7 +534,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         Collection result = new ArrayList();
@@ -596,7 +586,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         RMTable table = getTable(xid, tablename);
@@ -636,7 +626,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         RMTable table = getTable(xid, tablename);
@@ -676,7 +666,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         RMTable table = getTable(xid, tablename);
@@ -717,7 +707,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             throw new RemoteException(e.getLocalizedMessage(), e);
         }
 
-        if (dieTime.equals(DieSituation.AfterEnlist.toString()))
+        if (dieTime.equals("AfterEnlist"))
             dieNow();
 
         int n = 0;
@@ -751,20 +741,20 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
 
     public boolean prepare(int xid) throws InvalidTransactionException, RemoteException
     {
-        if (dieTime.equals(DieSituation.BeforePrepare.toString()))
+        if (dieTime.equals("BeforePrepare"))
             dieNow();
         if (xid < 0)
         {
             throw new InvalidTransactionException(xid, "Xid must be positive.");
         }
-        if (dieTime.equals(DieSituation.AfterPrepare.toString()))
+        if (dieTime.equals("AfterPrepare"))
             dieNow();
         return true;
     }
 
     public void commit(int xid) throws InvalidTransactionException, RemoteException
     {
-        if (dieTime.equals(DieSituation.BeforeCommit.toString()))
+        if (dieTime.equals("BeforeCommit"))
             dieNow();
         if (xid < 0)
         {
@@ -809,7 +799,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
 
     public void abort(int xid) throws InvalidTransactionException, RemoteException
     {
-        if (dieTime.equals(DieSituation.BeforeAbort.toString()))
+        if (dieTime.equals("BeforeAbort"))
             dieNow();
         if (xid < 0)
         {
