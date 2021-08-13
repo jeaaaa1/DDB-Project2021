@@ -31,10 +31,13 @@ public class Reservation implements ResourceItem, Serializable {
 
 	protected boolean isdeleted = false;
 
-	public Reservation(String custName, int resvType, String resvKey) {
+	private int price;
+
+	public Reservation(String custName, int resvType, String resvKey,int price) {
 		this.custName = custName;
 		this.resvType = resvType;
 		this.resvKey = resvKey;
+		this.price=price;
 	}
 
 	public String[] getColumnNames() {
@@ -49,7 +52,7 @@ public class Reservation implements ResourceItem, Serializable {
 		if (indexName.equals(INDEX_CUSTNAME))
 			return custName;
 		else
-			throw new InvalidIndexException(indexName);
+			return resvKey;
 	}
 
 	public Object getKey() {
@@ -61,6 +64,10 @@ public class Reservation implements ResourceItem, Serializable {
 	 */
 	public String getCustName() {
 		return custName;
+	}
+
+	public int getPrice() {
+		return price;
 	}
 
 	/**
@@ -87,7 +94,7 @@ public class Reservation implements ResourceItem, Serializable {
 
 	public Object clone() {
 		Reservation o = new Reservation(getCustName(), getResvType(),
-				getResvKey());
+				getResvKey(),getPrice());
 		o.isdeleted = isdeleted;
 		return o;
 	}

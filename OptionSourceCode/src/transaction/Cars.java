@@ -53,11 +53,11 @@ public class Cars implements ResourceItem{
         this.numAvail = numAvail;
     }
 
-    public void bookCars(int num) {
+    public void resverSeats(int num) {
         this.numAvail -= num;
     }
 
-    public void unbookCars(int num) {
+    public void cancelResverSeats(int num) {
         this.numAvail += num;
     }
 

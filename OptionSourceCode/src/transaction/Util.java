@@ -5,18 +5,18 @@ import java.io.*;
 public class Util {
     public static boolean storeObject(Object o, String path) {
         File xidLog = new File(path);
-        ObjectOutputStream objectOut = null;
+        ObjectOutputStream oout = null;
         try {
-            objectOut = new ObjectOutputStream(new FileOutputStream(xidLog));
-            objectOut.writeObject(o);
-            objectOut.flush();
+            oout = new ObjectOutputStream(new FileOutputStream(xidLog));
+            oout.writeObject(o);
+            oout.flush();
             return true;
         } catch (Exception e) {
             return false;
         } finally {
             try {
-                if (objectOut != null)
-                    objectOut.close();
+                if (oout != null)
+                    oout.close();
             } catch (IOException e1) {
             }
         }
@@ -24,16 +24,16 @@ public class Util {
 
     public static Object loadObject(String path) {
         File xidCounterLog = new File(path);
-        ObjectInputStream objectIn = null;
+        ObjectInputStream oin = null;
         try {
-            objectIn = new ObjectInputStream(new FileInputStream(xidCounterLog));
-            return objectIn.readObject();
+            oin = new ObjectInputStream(new FileInputStream(xidCounterLog));
+            return oin.readObject();
         } catch (Exception e) {
             return null;
         } finally {
             try {
-                if (objectIn != null)
-                    objectIn.close();
+                if (oin != null)
+                    oin.close();
             } catch (IOException e1) {
             }
         }
