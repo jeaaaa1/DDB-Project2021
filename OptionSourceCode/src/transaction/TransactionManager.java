@@ -37,7 +37,7 @@ public interface TransactionManager extends Remote {
             InvalidTransactionException;
 
 
-
+    public boolean setDieTime(String time);
 	
     /** The RMI name a TransactionManager binds to. */
     public static final String RMIName = "TM";

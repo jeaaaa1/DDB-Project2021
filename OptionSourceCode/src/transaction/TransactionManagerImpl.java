@@ -23,13 +23,18 @@ public class TransactionManagerImpl
 	// transaction to be recovered after some RMs died or TM died
 	private HashMap<Integer, Integer> xids_to_be_recovered = new HashMap<>();
 
+	public boolean setDieTime(String dieTime) {
+		this.dieTime = dieTime;
+		return true;
+	}
+
 	//log path
 	private String xidCounterPath = "xidCounter.log";
 	private String xidsStatusPath = "xidsStatus.log";
 	private String xidsToBeRecoveredPath = "xidsToBeRecovered.log";
 	public TransactionManagerImpl() throws RemoteException {
 		xidCounter = 1;
-		dieTime = "noDie";
+		dieTime = DieSituation.NoDie.toString();
 
 		recover();
 	}
@@ -178,7 +183,7 @@ public class TransactionManagerImpl
 			}
 		}
 		// prepared, die before commit if needed
-		if (dieTime.equals("BeforeCommit"))
+		if (dieTime.equals(DieSituation.BeforeCommit.toString()))
 			dieNow();
 
 		// log commit with xid
@@ -188,7 +193,7 @@ public class TransactionManagerImpl
 		}
 
 		// die after commit log was written if needed.
-		if (dieTime.equals("AfterCommit"))
+		if (dieTime.equals(DieSituation.AfterCommit.toString()))
 			dieNow();
 
 		// commit phase
