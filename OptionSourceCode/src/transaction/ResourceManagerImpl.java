@@ -122,7 +122,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
     {
     }
 
-    public void recover()
+    public void recover()//
     {
         HashSet t_xids = loadTransactionLogs();
         if (t_xids != null)
@@ -175,7 +175,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
         }
     }
 
-    public boolean reconnect()
+    public boolean reconnect()//要改成另一种形式，不从ddb。conf里获取了
     {
         Properties prop = new Properties();
         try
@@ -187,7 +187,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             e1.printStackTrace();
             return false;
         }
-        String rmiPort = prop.getProperty("tm.port");
+        String rmiPort = prop.getProperty("tm.port");//
         if (rmiPort == null)
         {
             rmiPort = "";
@@ -205,7 +205,8 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             {
                 int xid = ((Integer) iter.next()).intValue();
                 System.out.println(myRMIName + " Re-enlist to TM with xid" + xid);
-                tm.enlist(xid, this);
+                tm.enlist(xid, this);//设置了status这个变量
+                //要根据status进行操作
                 if (dieTime.equals("AfterEnlist"))
                     dieNow();
                 //                iter.remove();
@@ -369,7 +370,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
         return getTable(-1, tablename);
     }
 
-    protected HashSet loadTransactionLogs()
+    protected HashSet loadTransactionLogs()//也可以调用util的loadobject方法
     {
         File xidLog = new File("data/transactions.log");
         ObjectInputStream oin = null;
@@ -398,8 +399,8 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
     protected boolean storeTransactionLogs(HashSet xids)
     {
         File xidLog = new File("data/transactions.log");
-        xidLog.getParentFile().mkdirs();
-        xidLog.getParentFile().mkdirs();
+        xidLog.getParentFile().mkdirs();//
+        xidLog.getParentFile().mkdirs();//为啥建文件夹
         ObjectOutputStream oout = null;
         try
         {
@@ -504,6 +505,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
         if (item != null && !item.isDeleted())
         {
             table.lock(key, LockManager.READ);
+            //还要再这里移除旧的值，添加新值
             if (!storeTable(table, new File("data/" + xid + "/" + tablename)))
             {
                 throw new RemoteException("System Error: Can't write table to disk!");
@@ -547,7 +549,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
                 ResourceItem item = table.get(key);
                 if (item != null && !item.isDeleted() && item.getIndex(indexName).equals(indexVal))
                 {
-                    table.lock(key, LockManager.READ);
+                    table.lock(key, LockManager.READ);//这里要先锁住，然后下一个锁再去处理添加，而且也要去旧的再加新的
                     result.add(item);
                 }
             }
@@ -795,6 +797,8 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
         {
             xids.remove(new Integer(xid));
         }
+
+        System.out.println("Commit xid: " + xid);
     }
 
     public void abort(int xid) throws InvalidTransactionException, RemoteException
@@ -827,6 +831,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
         {
             xids.remove(new Integer(xid));
         }
+        System.out.println("Abort xid: " + xid);
     }
 
     //  test usage
