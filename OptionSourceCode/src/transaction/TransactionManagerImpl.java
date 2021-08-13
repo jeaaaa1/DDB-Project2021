@@ -21,13 +21,19 @@ public class TransactionManagerImpl
 	private HashMap<Integer, String> xids = new HashMap<>();
 	private HashMap<Integer, Integer> xidsToBeRecovered = new HashMap<>();
 
+	public boolean setDieTime(String dieTime) {
+		this.dieTime = dieTime;
+		return true;
+	}
+
 	//log path
 	private String xidCounterPath = "xidCounter.log";
 	private String xidsStatusPath = "xidsStatus.log";
 	private String xidsToBeRecoveredPath = "xidsToBeRecovered.log";
 	public TransactionManagerImpl() throws RemoteException {
 		xidCounter = 1;
-		dieTime = "noDie";
+		dieTime = DieSituation.NoDie.toString();
+
 		recover();
 	}
     
@@ -75,8 +81,10 @@ public class TransactionManagerImpl
 				String status = vals[0];
 				int rm_num = Integer.parseInt(vals[1]);
 				if (status.equals(COMMITTED)) {
+					// redo_logs
 					setRecoveryLater(xidTmp, rm_num);
 				}
+				// else, simply abort. The rms will be informed to abort transaction when they enlist
 			}
 			System.out.println("Finish redo logs.");
 		}
@@ -167,7 +175,8 @@ public class TransactionManagerImpl
 				throw new TransactionAbortedException(xid, "RM aborted");
 			}
 		}
-		if (dieTime.equals("BeforeCommit"))//test
+		// prepared, die before commit if needed
+		if (dieTime.equals(DieSituation.BeforeCommit.toString()))
 			dieNow();
 
 		synchronized (xids) {//xid记录一下
@@ -175,8 +184,8 @@ public class TransactionManagerImpl
 			Util.storeObject(xids, "data/" + xidsStatusPath);
 		}
 
-		// test
-		if (dieTime.equals("AfterCommit"))
+		// die after commit log was written if needed.
+		if (dieTime.equals(DieSituation.AfterCommit.toString()))
 			dieNow();
 
 		// commit

@@ -83,7 +83,13 @@ public class Hotels implements ResourceItem{
     public Object getIndex(String indexName) throws InvalidIndexException {
         throw new InvalidIndexException(indexName);
     }
+    public void resverSeats(int num) {
+        this.numAvail -= num;
+    }
 
+    public void cancelResverSeats(int num) {
+        this.numAvail += num;
+    }
     @Override
     public Object getKey() {
         return location;
