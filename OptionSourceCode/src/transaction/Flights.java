@@ -54,11 +54,11 @@ public class Flights implements ResourceItem {
         this.numAvail = numAvail;
     }
 
-    public void resverSeats(int num) {
+    public void bookSeats(int num) {
         this.numAvail -= num;
     }
 
-    public void cancelResverSeats(int num) {
+    public void unbookSeats(int num) {
         this.numAvail += num;
     }
 

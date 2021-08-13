@@ -66,7 +66,8 @@ public interface WorkflowController extends Remote {
     public void abort(int xid)
 	throws RemoteException,
 	       InvalidTransactionException;
-	public void setFlag(boolean flag) ;
+
+
     //////////
     // ADMINISTRATIVE INTERFACE
     //////////

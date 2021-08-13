@@ -40,7 +40,6 @@ public interface ResourceManager extends Remote {
 	public ResourceItem query(int xid, String tablename, Object key)
 			throws DeadlockException, InvalidTransactionException,
 			RemoteException;
-	public void setFlag(boolean flag) ;
 
 	public Collection query(int xid, String tablename, String indexName,
 			Object indexVal) throws DeadlockException,
@@ -79,6 +78,4 @@ public interface ResourceManager extends Remote {
 	public static final String RMINameCars = "RMCars";
 
 	public static final String RMINameCustomers = "RMCustomers";
-
-	public static final String TableReservation="Reservation";
 }
